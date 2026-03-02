@@ -1,0 +1,17 @@
+# OpenAI Codex MCP configuration template (lazy mode)
+
+[mcp_servers.unifi]
+command = "uv"
+args = ["--directory", "/path/to/unifi-network-mcp", "run", "python", "-m", "src.main"]
+
+[mcp_servers.unifi.env]
+UNIFI_HOST = "192.168.1.1"
+UNIFI_USERNAME = "admin"
+UNIFI_PASSWORD = "password"
+UNIFI_PORT = "443"
+UNIFI_SITE = "default"
+UNIFI_VERIFY_SSL = "false"
+# Optional: auto/proxy/direct
+# UNIFI_CONTROLLER_TYPE = "auto"
+# Default mode is lazy; can be omitted.
+# UNIFI_TOOL_REGISTRATION_MODE = "lazy"

@@ -166,9 +166,9 @@ def wrap_tool(func, tool_name: str):
             duration_ms = (time.perf_counter() - start) * 1000.0
             try:
                 log_tool_call(tool_name, args, kwargs, res, duration_ms, err)
-            except Exception:
-                # Never let diagnostics break the tool
-                pass
+            except Exception as diag_err:
+                # Never let diagnostics break the tool.
+                _logger.debug("Diagnostics tool-call logging failed: %s", diag_err, exc_info=True)
 
     # Preserve the original function's signature for FastMCP schema generation
     _wrapper.__signature__ = inspect.signature(func)

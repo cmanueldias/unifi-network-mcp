@@ -74,8 +74,8 @@ Complete guide to the permission system:
 **...build automation scripts**
 → See [examples/python/](../examples/python/)
 
-**...use with Claude Desktop**
-→ See [examples/CLAUDE_DESKTOP.md](../examples/CLAUDE_DESKTOP.md)
+**...use with OpenAI Codex**
+→ See [examples/CODEX.md](../examples/CODEX.md)
 
 ---
 
@@ -128,7 +128,7 @@ See [Context Optimization Comparison](context-optimization-comparison.md) for de
 
 ## 🤝 Contributing
 
-See [CLAUDE.md](../CLAUDE.md) for project development guidelines.
+See [CODEX.md](../CODEX.md) for project development guidelines.
 
 ---
 
@@ -137,7 +137,7 @@ See [CLAUDE.md](../CLAUDE.md) for project development guidelines.
 ### Root Documentation
 - [README.md](../README.md) - Main project documentation
 - [QUICKSTART.md](../QUICKSTART.md) - Quick start guide
-- [CLAUDE.md](../CLAUDE.md) - Development guidelines
+- [CODEX.md](../CODEX.md) - Development guidelines
 
 ### Core Documentation (docs/)
 - [context-optimization-comparison.md](context-optimization-comparison.md) - Mode comparison

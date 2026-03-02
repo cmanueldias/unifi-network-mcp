@@ -12,7 +12,7 @@
 
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/sirkirby)
 
-A self-hosted [Model Context Protocol](https://github.com/modelcontextprotocol) (MCP) server that turns your UniFi Network Controller into a rich set of interactive tools. Every capability is exposed via standard MCP **tools** prefixed with `unifi_`, so any LLM or agent that speaks MCP (e.g. Claude Desktop, `mcp-cli`, LangChain, etc.) can query, analyze **and** – when explicitly authorized – modify your network. These tools must have local access to your UniFi Network Controller, by either running locally or in the cloud connected via a secure reverse proxy. Please consider the [security implications](#security-considerations) of running these tools in the cloud as they contain sensitive information and access to your network.
+A self-hosted [Model Context Protocol](https://github.com/modelcontextprotocol) (MCP) server that turns your UniFi Network Controller into a rich set of interactive tools. Every capability is exposed via standard MCP **tools** prefixed with `unifi_`, so any LLM or agent that speaks MCP (e.g. OpenAI Codex, `mcp-cli`, LangChain, etc.) can query, analyze **and** – when explicitly authorized – modify your network. These tools must have local access to your UniFi Network Controller, by either running locally or in the cloud connected via a secure reverse proxy. Please consider the [security implications](#security-considerations) of running these tools in the cloud as they contain sensitive information and access to your network.
 
 ---
 
@@ -24,7 +24,7 @@ A self-hosted [Model Context Protocol](https://github.com/modelcontextprotocol) 
   * [Python / UV](#python--uv)
   * [Install from PyPI](#install-from-pypi)
 * [Using with Local LLMs and Agents](#using-with-local-llms-and-agents)
-* [Using with Claude Desktop](#using-with-claude-desktop)
+* [Using with OpenAI Codex](#using-with-openai-codex)
 * [Code Execution Mode](#code-execution-mode)
   * [Overview](#overview)
   * [Context Optimization](#context-optimization)
@@ -118,7 +118,7 @@ No internet access is required, everything runs locally. It's recommend you have
 
 ### Recommended
 
-Install [LM Studio](https://lmstudio.ai) and edit the mcp.json file `chat prompt --> tool icon --> edit mcp.json` to add the unifi-network-mcp server tools, allowing you to prompt using a locally run LLM of your choice. Configure just as you would for Claude desktop. I recommend loading a tool capable model like OpenAI's [gp-oss](https://lmstudio.ai/models/openai/gpt-oss-20b), and prompt it to use the UniFi tools.
+Install [LM Studio](https://lmstudio.ai) and edit the mcp.json file `chat prompt --> tool icon --> edit mcp.json` to add the unifi-network-mcp server tools, allowing you to prompt using a locally run LLM of your choice. Configure just as you would for OpenAI Codex. I recommend loading a tool capable model like OpenAI's [gp-oss](https://lmstudio.ai/models/openai/gpt-oss-20b), and prompt it to use the UniFi tools.
 
 ```text
 Example prompt: using the unifi tools, list my most active clients on the network and include the type of traffic and total bandwidth used.
@@ -142,7 +142,7 @@ Code execution mode consists of three key components:
 2. **Async Operations** - Background job execution for long-running operations
 3. **Reference Implementations** - Example clients showing code-execution patterns
 
-This implementation follows the patterns described in [Anthropic's Code Execution with MCP article](https://www.anthropic.com/engineering/code-execution-with-mcp).
+This implementation follows the patterns described in [OpenAI Codex MCP patterns](https://platform.openai.com/docs).
 
 ### 🚀 Context Optimization (New in v0.2.0)
 
@@ -174,43 +174,33 @@ The server now supports **lazy tool registration** to dramatically reduce LLM co
 
 If you're upgrading and want to restore the previous behavior (all tools registered immediately), add this to your config:
 
-```json
-{
-  "mcpServers": {
-    "unifi": {
-      "command": "uv",
-      "args": ["--directory", "/path/to/unifi-network-mcp", "run", "python", "-m", "src.main"],
-      "env": {
-        "UNIFI_HOST": "192.168.1.1",
-        "UNIFI_USERNAME": "admin",
-        "UNIFI_PASSWORD": "password",
-        "UNIFI_TOOL_REGISTRATION_MODE": "eager"
-      }
-    }
-  }
-}
+```toml
+[mcp_servers.unifi]
+command = "uv"
+args = ["--directory", "/path/to/unifi-network-mcp", "run", "python", "-m", "src.main"]
+
+[mcp_servers.unifi.env]
+UNIFI_HOST = "192.168.1.1"
+UNIFI_USERNAME = "admin"
+UNIFI_PASSWORD = "password"
+UNIFI_TOOL_REGISTRATION_MODE = "eager"
 ```
 
 **Default behavior (lazy mode - recommended):**
 
-```json
-{
-  "mcpServers": {
-    "unifi": {
-      "command": "uv",
-      "args": ["--directory", "/path/to/unifi-network-mcp", "run", "python", "-m", "src.main"],
-      "env": {
-        "UNIFI_HOST": "192.168.1.1",
-        "UNIFI_USERNAME": "admin",
-        "UNIFI_PASSWORD": "password"
-        // UNIFI_TOOL_REGISTRATION_MODE defaults to "lazy" - no need to set!
-      }
-    }
-  }
-}
+```toml
+[mcp_servers.unifi]
+command = "uv"
+args = ["--directory", "/path/to/unifi-network-mcp", "run", "python", "-m", "src.main"]
+
+[mcp_servers.unifi.env]
+UNIFI_HOST = "192.168.1.1"
+UNIFI_USERNAME = "admin"
+UNIFI_PASSWORD = "password"
+# UNIFI_TOOL_REGISTRATION_MODE defaults to "lazy"
 ```
 
-**Result:** Claude starts with minimal context, tools load transparently when called - 96% token savings with zero UX compromise!
+**Result:** Codex starts with minimal context, tools load transparently when called - 96% token savings with zero UX compromise!
 
 ### Tool Index
 
@@ -320,23 +310,23 @@ For bulk operations or long-running tasks, use batch mode:
 - Jobs are stored in-memory only (no persistence)
 - Job IDs are unique per server session
 
-### Using with Claude Desktop
+### Using with OpenAI Codex
 
-Claude Desktop has built-in code execution that automatically uses the tool index:
+OpenAI Codex has built-in code execution that automatically uses the tool index:
 
 ```
 You: "Show me the top 10 wireless clients by traffic, excluding guest networks"
 ```
 
-Claude will:
+Codex will:
 1. Query `unifi_tool_index` to discover tools
 2. Call `unifi_list_clients` to fetch data
 3. Write and execute code to filter/sort in its sandbox
 4. Show you only the final top 10 results
 
-**Token savings:** Instead of processing 500+ clients in context, Claude processes them in code and shows only the summary.
+**Token savings:** Instead of processing 500+ clients in context, Codex processes them in code and shows only the summary.
 
-See [`examples/CLAUDE_DESKTOP.md`](examples/CLAUDE_DESKTOP.md) for detailed usage guide.
+See [`examples/CODEX.md`](examples/CODEX.md) for detailed usage guide.
 
 ### Python Client Examples
 
@@ -411,53 +401,48 @@ This enables:
 
 ---
 
-## Using with Claude Desktop
+## Using with OpenAI Codex
 
-Add (or update) the `unifi-network-mcp` block under `mcpServers` in your `claude_desktop_config.json`.
+Add (or update) a Codex MCP server block in your `codex_config.toml`.
 
-### Option 1 – Claude invokes the local package
+### Option 1 – Codex invokes the local package
 
-```jsonc
-"unifi-network-mcp": {
-  "command": "/path/to/your/.local/bin/uvx",
-  "args": ["--quiet", "unifi-network-mcp"], // Or "unifi-network-mcp==<version>"
-  "env": {
-    "UNIFI_HOST": "192.168.1.1",
-    "UNIFI_USERNAME": "admin",
-    "UNIFI_PASSWORD": "secret",
-    "UNIFI_PORT": "443",
-    "UNIFI_SITE": "default",
-    "UNIFI_VERIFY_SSL": "false"
-    // Optional: "UNIFI_CONTROLLER_TYPE": "auto"
-  }
-}
+```toml
+[mcp_servers.unifi-network-mcp]
+command = "uv"
+args = ["--directory", "/path/to/unifi-network-mcp", "run", "python", "-m", "src.main"]
+
+[mcp_servers.unifi-network-mcp.env]
+UNIFI_HOST = "192.168.1.1"
+UNIFI_USERNAME = "admin"
+UNIFI_PASSWORD = "secret"
+UNIFI_PORT = "443"
+UNIFI_SITE = "default"
+UNIFI_VERIFY_SSL = "false"
+# UNIFI_CONTROLLER_TYPE = "auto"
+# UNIFI_TOOL_REGISTRATION_MODE = "lazy"
 ```
 
-* `uvx` handles installing/running the package in its own environment.
-* The `--quiet` flag is recommended if `uvx` outputs non-JSON messages.
-* If you want to pin to a specific version, use `"unifi-network-mcp==<version_number>"` as the package name.
-* If your script name in `pyproject.toml` differs from the package name, use `["--quiet", "<package-name>", "<script-name>"]`.
+This is the same structure used in [`examples/codex_config.toml`](examples/codex_config.toml).
 
-### Option 2 – Claude starts a Docker container
+### Option 2 – Codex starts a Docker container
 
-```jsonc
-"unifi-network-mcp": {
-  "command": "docker",
-  "args": [
-    "run", "--rm", "-i",
-    "-e", "UNIFI_HOST=192.168.1.1",
-    "-e", "UNIFI_USERNAME=admin",
-    "-e", "UNIFI_PASSWORD=secret",
-    "-e", "UNIFI_PORT=443",
-    "-e", "UNIFI_SITE=default",
-    "-e", "UNIFI_VERIFY_SSL=false",
-    // Optional: "-e", "UNIFI_CONTROLLER_TYPE=auto",
-    "ghcr.io/sirkirby/unifi-network-mcp:latest"
-  ]
-}
+```toml
+[mcp_servers.unifi-network-mcp]
+command = "docker"
+args = [
+  "run", "--rm", "-i",
+  "-e", "UNIFI_HOST=192.168.1.1",
+  "-e", "UNIFI_USERNAME=admin",
+  "-e", "UNIFI_PASSWORD=secret",
+  "-e", "UNIFI_PORT=443",
+  "-e", "UNIFI_SITE=default",
+  "-e", "UNIFI_VERIFY_SSL=false",
+  "ghcr.io/sirkirby/unifi-network-mcp:latest",
+]
 ```
 
-### Option 3 – Claude attaches to an existing Docker container (recommended for compose)
+### Option 3 – Codex attaches to an existing Docker container (recommended for compose)
 
 1) Using the container name as specified in `docker-compose.yml` from the repository root:
 
@@ -465,21 +450,21 @@ Add (or update) the `unifi-network-mcp` block under `mcpServers` in your `claude
 docker-compose up --build
 ```
 
-2) Then configure Claude Desktop:
+2) Then configure OpenAI Codex:
 
-```jsonc
-"unifi-network-mcp": {
-  "command": "docker",
-  "args": ["exec", "-i", "unifi-network-mcp", "unifi-network-mcp"]
-}
+```toml
+[mcp_servers.unifi-network-mcp]
+command = "docker"
+args = ["exec", "-i", "unifi-network-mcp", "unifi-network-mcp"]
 ```
 
 Notes:
 
 * Use `-T` only with `docker compose exec` (it disables TTY for clean JSON). Do not use `-T` with `docker exec`.
 * Ensure the compose service is running (`docker compose up -d`) before attaching.
+* For a ready-to-use profile, see [`examples/codex_meta_only.toml`](examples/codex_meta_only.toml).
 
-After editing the config **restart Claude Desktop**, then test with:
+After editing the config **restart OpenAI Codex**, then test with:
 
 ```text
 @unifi-network-mcp list tools
@@ -531,7 +516,7 @@ The server merges settings from **environment variables**, an optional `.env` fi
 | `UNIFI_CONTROLLER_TYPE` | Controller API path type: `auto` (detect), `proxy` (UniFi OS), `direct` (standalone). Default `auto` |
 | `UNIFI_MCP_HTTP_ENABLED` | Set `true` to enable optional HTTP server (default `false`) |
 | `UNIFI_MCP_HTTP_TRANSPORT` | HTTP transport: `streamable-http` (default, current MCP spec) or `sse` (legacy). Only applies when HTTP is enabled |
-| `UNIFI_MCP_HOST` | HTTP bind address (default `0.0.0.0`) |
+| `UNIFI_MCP_HOST` | HTTP bind address (default `127.0.0.1`) |
 | `UNIFI_MCP_PORT` | HTTP bind port (default `3000`) |
 | `UNIFI_AUTO_CONFIRM` | Set `true` to auto-confirm all mutating operations (skips preview step). Ideal for workflow automation (n8n, Make, Zapier). Default `false` |
 | `UNIFI_TOOL_REGISTRATION_MODE` | Tool loading mode: `lazy` (default), `eager`, or `meta_only`. See [Context Optimization](#context-optimization) |
@@ -621,7 +606,7 @@ If you encounter connection errors:
 
 ### `src/config/config.yaml`
 
-Defines HTTP bind host/port (`0.0.0.0:3000` by default) plus granular permission flags. Examples below assume the default port.
+Defines HTTP bind host/port (`127.0.0.1:3000` by default) plus granular permission flags. Examples below assume the default port.
 
 ---
 
@@ -777,7 +762,7 @@ The server includes a comprehensive permission system with **safe defaults**:
 **Recommended: Environment Variables** (works with Docker, PyPI installs, uvx)
 
 ```bash
-# For Claude Desktop - add to env section:
+# For OpenAI Codex - add to env section:
 "env": {
   "UNIFI_PERMISSIONS_NETWORKS_CREATE": "true",
   "UNIFI_PERMISSIONS_DEVICES_UPDATE": "true"
@@ -808,7 +793,7 @@ See [docs/permissions.md](docs/permissions.md) for complete documentation includ
 ### General Recommendations
 
 * Use LM Studio or Ollama to run tool-capable models locally if possible. This is the recommended and safest way to use these tools.
-* If you opt to use cloud-based LLMs like Claude, Gemini, and ChatGPT for analysis, stick with read-only tools (the default configuration).
+* If you opt to use cloud-based LLMs like Codex, Gemini, and ChatGPT for analysis, stick with read-only tools (the default configuration).
 * **Review permissions carefully** before enabling high-risk operations. Use environment variables for runtime control.
 * Create, update, and delete tools should be used with caution and only enabled when necessary.
 * Do not host outside of your network unless using a secure reverse proxy like Cloudflare Tunnel or Ngrok. Even then, an additional layer of authentication is recommended.
@@ -1061,13 +1046,13 @@ uv pip install unifi-network-mcp
 
 ### Option 1: Using Docker
 
-Test with Docker and Claude Desktop:
+Test with Docker and OpenAI Codex:
 
 ```bash
 docker compose up --build
 ```
 
-Then configure Claude Desktop to use the Docker container (see [Configuration](#configuration) above).
+Then configure OpenAI Codex to use the Docker container (see [Using with OpenAI Codex](#using-with-openai-codex) above).
 
 ### Option 2: Using Python/uv (Recommended for Development)
 
@@ -1127,34 +1112,22 @@ uv run python examples/python/use_async_jobs.py
 uv run python examples/python/programmatic_client.py
 ```
 
-**5. Test with Claude Desktop (local Python server):**
+**5. Test with OpenAI Codex (local Python server):**
 
-Update your Claude Desktop config to use the local Python server instead of Docker:
+Update your OpenAI Codex config to use the local Python server instead of Docker:
 
-```json
-{
-  "mcpServers": {
-    "unifi": {
-      "command": "uv",
-      "args": [
-        "--directory",
-        "/path/to/unifi-network-mcp",
-        "run",
-        "python",
-        "-m",
-        "src.main"
-      ],
-      "env": {
-        "UNIFI_HOST": "your-controller-ip",
-        "UNIFI_USERNAME": "your-username",
-        "UNIFI_PASSWORD": "your-password"
-      }
-    }
-  }
-}
+```toml
+[mcp_servers.unifi]
+command = "uv"
+args = ["--directory", "/path/to/unifi-network-mcp", "run", "python", "-m", "src.main"]
+
+[mcp_servers.unifi.env]
+UNIFI_HOST = "your-controller-ip"
+UNIFI_USERNAME = "your-username"
+UNIFI_PASSWORD = "your-password"
 ```
 
-Then restart Claude Desktop and test:
+Then restart OpenAI Codex and test:
 - "What UniFi tools are available?" (uses `unifi_tool_index`)
 - "Show me my top 10 wireless clients" (uses code execution mode)
 - "List all my UniFi devices"

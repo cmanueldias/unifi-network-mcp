@@ -119,7 +119,7 @@ If an anchor doesn't fit, ask. Do not invent new patterns.
 ### 3.1 Layering (Do Not Break)
 
 ```
-MCP Client (Claude Desktop, LM Studio, automation platforms)
+MCP Client (OpenAI Codex, LM Studio, automation platforms)
     |
     v  MCP Protocol (JSON-RPC over stdio / Streamable HTTP / SSE)
     |
@@ -240,7 +240,7 @@ The server supports three transport modes:
 
 | Transport | Config | Use Case |
 |-----------|--------|----------|
-| **stdio** | Always active | Claude Desktop, local LLMs, primary transport |
+| **stdio** | Always active | OpenAI Codex, local LLMs, primary transport |
 | **Streamable HTTP** | `UNIFI_MCP_HTTP_ENABLED=true`, `UNIFI_MCP_HTTP_TRANSPORT=streamable-http` | Remote clients, automation platforms |
 | **HTTP SSE** (legacy) | `UNIFI_MCP_HTTP_ENABLED=true`, `UNIFI_MCP_HTTP_TRANSPORT=sse` | Backwards compatibility only |
 

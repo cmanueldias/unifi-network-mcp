@@ -1,6 +1,6 @@
 # AI Assistant Instructions
 
-This file contains instructions for AI assistants (Cursor, Codex CLI) when working with this project.
+This file contains instructions for AI assistants (OpenAI Codex) when working with this project.
 
 ---
 

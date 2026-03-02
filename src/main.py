@@ -326,7 +326,7 @@ async def main_async():
         logger.error(f"Error listing tools in main_async: {e}")
 
     # Run stdio always; optionally run HTTP based on config flag
-    host = config.server.get("host", "0.0.0.0")
+    host = config.server.get("host", "127.0.0.1")
     port = int(config.server.get("port", 3000))
     http_cfg = config.server.get("http", {})
     http_enabled = parse_config_bool(http_cfg.get("enabled", False))

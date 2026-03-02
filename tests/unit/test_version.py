@@ -4,11 +4,11 @@ This test ensures that the dynamic versioning from git tags is working correctly
 The version should be derived from git tags (e.g., v0.4.0 -> 0.4.0).
 """
 
-import re
 import subprocess
 from pathlib import Path
 
 import pytest
+from packaging.version import InvalidVersion, Version
 
 
 class TestVersion:
@@ -28,13 +28,13 @@ class TestVersion:
 
         pkg_version = version("unifi-network-mcp")
 
-        # PEP 440 version pattern (simplified)
-        # Matches: 0.4.0, 0.4.0.dev3, 0.4.0.dev3+gabc1234, 0.4.0+dirty, etc.
-        pep440_pattern = r"^\d+\.\d+\.\d+(\.(dev|a|b|rc)\d+)?(\+[a-zA-Z0-9.]+)?$"
+        try:
+            parsed = Version(pkg_version)
+        except InvalidVersion as exc:
+            pytest.fail(f"Version '{pkg_version}' is not PEP 440 compliant: {exc}")
 
-        assert re.match(pep440_pattern, pkg_version), (
-            f"Version '{pkg_version}' does not match PEP 440 format.\n"
-            f"Expected format like: 0.4.0, 0.4.0.dev3, 0.4.0.dev3+gabc1234"
+        assert str(parsed) == pkg_version, (
+            f"Version '{pkg_version}' normalized to '{parsed}', expected canonical PEP 440 format."
         )
 
     def test_version_matches_git_tag(self):

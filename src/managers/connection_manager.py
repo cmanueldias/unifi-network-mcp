@@ -461,8 +461,12 @@ class ConnectionManager:
                         duration_ms,
                         True,
                     )
-            except Exception:
-                pass
+            except Exception as diag_err:
+                logger.debug(
+                    "Diagnostics API request logging failed (initial request): %s",
+                    diag_err,
+                    exc_info=True,
+                )
             return response if return_raw else response.get("data")
 
         except LoginRequired:
@@ -491,8 +495,12 @@ class ConnectionManager:
                                 duration_ms,
                                 True,
                             )
-                    except Exception:
-                        pass
+                    except Exception as diag_err:
+                        logger.debug(
+                            "Diagnostics API request logging failed (retry request): %s",
+                            diag_err,
+                            exc_info=True,
+                        )
                     return retry_response if return_raw else retry_response.get("data")
                 except Exception as retry_e:
                     logger.error(
@@ -516,8 +524,12 @@ class ConnectionManager:
                         0.0,
                         False,
                     )
-            except Exception:
-                pass
+            except Exception as diag_err:
+                logger.debug(
+                    "Diagnostics API request logging failed (request error path): %s",
+                    diag_err,
+                    exc_info=True,
+                )
             raise
         except Exception as e:
             logger.error(
@@ -537,8 +549,12 @@ class ConnectionManager:
                         0.0,
                         False,
                     )
-            except Exception:
-                pass
+            except Exception as diag_err:
+                logger.debug(
+                    "Diagnostics API request logging failed (unexpected error path): %s",
+                    diag_err,
+                    exc_info=True,
+                )
             raise
         finally:
             # Always restore original value (FR-003: maintain session state)

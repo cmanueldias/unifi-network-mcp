@@ -121,24 +121,19 @@ export UNIFI_PERMISSIONS_DEVICES_UPDATE=true
 export UNIFI_PERMISSIONS_CLIENTS_UPDATE=true
 ```
 
-**For Claude Desktop**, add to your MCP server config:
+**For OpenAI Codex**, add to your MCP server config:
 
-```json
-{
-  "mcpServers": {
-    "unifi": {
-      "command": "uv",
-      "args": ["--directory", "/path/to/unifi-network-mcp", "run", "python", "-m", "src.main"],
-      "env": {
-        "UNIFI_HOST": "192.168.1.1",
-        "UNIFI_USERNAME": "admin",
-        "UNIFI_PASSWORD": "password",
-        "UNIFI_PERMISSIONS_NETWORKS_CREATE": "true",
-        "UNIFI_PERMISSIONS_DEVICES_UPDATE": "true"
-      }
-    }
-  }
-}
+```toml
+[mcp_servers.unifi]
+command = "uv"
+args = ["--directory", "/path/to/unifi-network-mcp", "run", "python", "-m", "src.main"]
+
+[mcp_servers.unifi.env]
+UNIFI_HOST = "192.168.1.1"
+UNIFI_USERNAME = "admin"
+UNIFI_PASSWORD = "password"
+UNIFI_PERMISSIONS_NETWORKS_CREATE = "true"
+UNIFI_PERMISSIONS_DEVICES_UPDATE = "true"
 ```
 
 ### 2. Config File
@@ -181,7 +176,7 @@ Environment variables follow the pattern: `UNIFI_PERMISSIONS_<CATEGORY>_<ACTION>
 
 ## Impact on Tool Discovery and Availability
 
-**Important:** Permissions directly control which tools your MCP client (e.g., Claude Desktop) can see and use.
+**Important:** Permissions directly control which tools your MCP client (e.g., OpenAI Codex) can see and use.
 
 The tool manifest (`tools_manifest.json`) always includes all tools regardless of permission settings. However, permissions determine what is actually registered with the MCP server at startup:
 
@@ -311,7 +306,7 @@ Note: `delete` operations typically use the `update` permission since they modif
 
 ### Tool Missing from Client Tool List (Eager Mode)
 
-**Symptom:** A tool you expect to see is not listed by your MCP client (e.g., Claude Desktop)
+**Symptom:** A tool you expect to see is not listed by your MCP client (e.g., OpenAI Codex)
 
 **Cause:** The tool's permission is disabled, so it was not registered with the MCP server at startup.
 
@@ -399,13 +394,10 @@ export UNIFI_AUTO_CONFIRM=true
 docker run -e UNIFI_AUTO_CONFIRM=true ...
 ```
 
-**Claude Desktop / n8n:**
-```json
-{
-  "env": {
-    "UNIFI_AUTO_CONFIRM": "true"
-  }
-}
+**OpenAI Codex / n8n:**
+```toml
+[mcp_servers.unifi.env]
+UNIFI_AUTO_CONFIRM = "true"
 ```
 
 When `UNIFI_AUTO_CONFIRM=true`:

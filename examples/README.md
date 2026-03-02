@@ -20,16 +20,16 @@ Practical, working examples showing how to:
 
 See: [Python Examples README](python/README.md)
 
-### Claude Desktop Guide (`CLAUDE_DESKTOP.md`)
+### OpenAI Codex Guide (`CODEX.md`)
 
-Complete guide showing how Claude Desktop uses the tool index and async jobs features automatically:
+Complete guide showing how OpenAI Codex uses the tool index and async jobs features automatically:
 
-- How Claude discovers and uses tools
+- How Codex discovers and uses tools
 - Code-based data processing for token efficiency
 - Async job management in conversations
 - Best practices and example prompts
 
-See: [Claude Desktop Guide](CLAUDE_DESKTOP.md)
+See: [OpenAI Codex Guide](CODEX.md)
 
 ---
 
@@ -52,9 +52,9 @@ python examples/python/use_async_jobs.py
 python examples/python/programmatic_client.py
 ```
 
-### Claude Desktop
+### OpenAI Codex
 
-Just use the server with Claude Desktop - it automatically uses the tool index and async jobs features.
+Just use the server with OpenAI Codex - it automatically uses the tool index and async jobs features.
 
 Example prompt:
 ```
@@ -62,7 +62,7 @@ Show me the top 10 wireless clients by traffic,
 excluding guest networks
 ```
 
-Claude will query the tool index, fetch clients, filter in code, and show results.
+Codex will query the tool index, fetch clients, filter in code, and show results.
 
 ---
 
@@ -152,10 +152,10 @@ top_10 = sorted(wireless, key=lambda c: c["tx_bytes"])[:10]
              │
     ┌────────┴────────┐
     │                 │
-┌───▼────────┐  ┌────▼──────────┐
-│   Claude   │  │    Python     │
-│  Desktop   │  │   Scripts     │
-└────────────┘  └───────────────┘
+┌───▼────────────────┐  ┌────▼──────────┐
+│   OpenAI Codex     │  │    Python     │
+│   (MCP Client)     │  │   Scripts     │
+└────────────────────┘  └───────────────┘
 (uses features    (direct API
  automatically)    access)
 ```
@@ -171,7 +171,7 @@ top_10 = sorted(wireless, key=lambda c: c["tx_bytes"])[:10]
 The original plan included TypeScript examples with `isolated-vm` for sandboxed code execution. However:
 
 1. **Compatibility issues**: Node.js v25.x broke `isolated-vm` compilation
-2. **Unnecessary complexity**: Claude Desktop already has code execution built-in
+2. **Unnecessary complexity**: OpenAI Codex already has code execution built-in
 3. **Limited audience**: Who's building their own code execution environment?
 4. **Better alternatives**: Python examples are simpler, work today, and more useful
 
@@ -184,4 +184,4 @@ The **server features** (tool index, async jobs) work with ANY MCP client - you 
 - [Main README](../README.md) - Server setup and configuration
 - [Tool Catalog](../README.md#-tool-catalog) - All available tools
 - [Python Examples](python/README.md) - Detailed Python usage
-- [Claude Desktop Guide](CLAUDE_DESKTOP.md) - Using with Claude Desktop
+- [OpenAI Codex Guide](CODEX.md) - Using with OpenAI Codex

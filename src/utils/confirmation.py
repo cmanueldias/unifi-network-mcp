@@ -175,7 +175,7 @@ def update_preview(
     # Make the message more descriptive
     name_str = f"'{resource_name}'" if resource_name else resource_id
     fields = ", ".join(updates.keys())
-    response["message"] = f"Will update {fields} on {resource_type} {name_str}. Set confirm=true to execute."
+    response["message"] = f"Will modify fields {fields} on {resource_type} {name_str}. Set confirm=true to execute."
 
     return response
 

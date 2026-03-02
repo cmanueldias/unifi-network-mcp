@@ -6,11 +6,11 @@
 
 ---
 
-## EAGER MODE (Default - All Tools Loaded)
+## EAGER MODE (All Tools Loaded)
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│ Claude Desktop Connects to MCP Server                       │
+│ OpenAI Codex Connects to MCP Server                       │
 └─────────────────────────────────────────────────────────────┘
                         │
                         ▼
@@ -34,7 +34,7 @@
                         │
                         ▼
 ┌─────────────────────────────────────────────────────────────┐
-│ Claude's Context Window                                      │
+│ Codex's Context Window                                      │
 │                                                              │
 │ ┌───────────────────────────────────────────┐               │
 │ │ System Prompt              │ ~1,000 tokens │               │
@@ -56,7 +56,7 @@
                         │
                         ▼
 ┌─────────────────────────────────────────────────────────────┐
-│ Claude: Calls unifi_list_clients                            │
+│ Codex: Calls unifi_list_clients                            │
 │ (Already has schema in context)                             │
 └─────────────────────────────────────────────────────────────┘
                         │
@@ -73,7 +73,7 @@
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│ Claude Desktop Connects to MCP Server                       │
+│ OpenAI Codex Connects to MCP Server                       │
 │ (with UNIFI_TOOL_REGISTRATION_MODE=meta_only)               │
 └─────────────────────────────────────────────────────────────┘
                         │
@@ -92,7 +92,7 @@
                         │
                         ▼
 ┌─────────────────────────────────────────────────────────────┐
-│ Claude's Context Window                                      │
+│ Codex's Context Window                                      │
 │                                                              │
 │ ┌───────────────────────────────────────────┐               │
 │ │ System Prompt              │ ~1,000 tokens │               │
@@ -114,7 +114,7 @@
                         │
                         ▼
 ┌─────────────────────────────────────────────────────────────┐
-│ Claude: Hmm, I need to find client-related tools...         │
+│ Codex: Hmm, I need to find client-related tools...         │
 │ Calls unifi_tool_index to discover available tools          │
 └─────────────────────────────────────────────────────────────┘
                         │
@@ -134,7 +134,7 @@
                         │
                         ▼
 ┌─────────────────────────────────────────────────────────────┐
-│ Claude: Perfect! I found unifi_list_clients                 │
+│ Codex: Perfect! I found unifi_list_clients                 │
 │ Calls unifi_list_clients                                    │
 └─────────────────────────────────────────────────────────────┘
                         │
@@ -215,7 +215,7 @@
 - 🐛 **Debugging** (want full visibility)
 
 ### Use META_ONLY Mode When:
-- 💬 **Conversational AI** (Claude Desktop, chatbots)
+- 💬 **Conversational AI** (OpenAI Codex, chatbots)
 - 🌐 **Web interfaces** (token costs matter)
 - 📱 **Mobile apps** (limited context windows)
 - 🎯 **Targeted workflows** (users typically need 1-3 tools)

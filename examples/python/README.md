@@ -197,4 +197,4 @@ async with UniFiMCPClient() as client:
 
 - [Main README](../../README.md) - Server setup and configuration
 - [Tool Catalog](../../README.md#-tool-catalog) - All available tools
-- [Claude Desktop Guide](../CLAUDE_DESKTOP.md) - Using with Claude Desktop
+- [OpenAI Codex Guide](../CODEX.md) - Using with OpenAI Codex

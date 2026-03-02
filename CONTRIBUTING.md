@@ -111,12 +111,12 @@ make test-cov
 # Development console (eager mode, all tools available)
 make console
 
-# Test with Claude Desktop
-# 1. Update your claude_desktop_config.json
+# Test with OpenAI Codex
+# 1. Update your codex_config.toml
 # 2. Set command to use local development:
 #    "command": "/Users/you/.local/bin/uv"
 #    "args": ["--directory", "/path/to/unifi-network-mcp", "run", "python", "-m", "src.main"]
-# 3. Restart Claude Desktop
+# 3. Restart OpenAI Codex
 ```
 
 ## Contributor Workflow

@@ -6,7 +6,7 @@ enabling code-execution mode and programmatic tool discovery.
 The registry is populated during tool registration via the permissioned_tool
 decorator in main.py, and can be queried via the unifi_tool_index tool.
 
-In lazy mode, tool metadata is read from a static manifest (tools_manifest.json)
+In lazy/meta_only mode, tool metadata is read from a static manifest (tools_manifest.json)
 generated at build time, allowing full tool discovery without runtime imports.
 """
 
@@ -89,7 +89,7 @@ def register_tool(
 def get_tool_index() -> Dict[str, Any]:
     """Get the complete tool index in machine-readable format.
 
-    In lazy loading mode, reads tool metadata from a static manifest file
+    In lazy/meta_only mode, reads tool metadata from a static manifest file
     (tools_manifest.json) generated at build time. This provides full tool
     schemas without runtime imports.
 
@@ -97,11 +97,11 @@ def get_tool_index() -> Dict[str, Any]:
         Dictionary with "tools" key containing list of tool metadata objects.
         Each tool includes: name, description, input_schema, and optionally output_schema.
     """
-    # In lazy mode, read from static manifest
+    # In lazy/meta_only mode, read from static manifest
     try:
         from src.bootstrap import UNIFI_TOOL_REGISTRATION_MODE
 
-        if UNIFI_TOOL_REGISTRATION_MODE == "lazy":
+        if UNIFI_TOOL_REGISTRATION_MODE in {"lazy", "meta_only"}:
             # Try to load static manifest first
             manifest_path = Path(__file__).parent / "tools_manifest.json"
             if manifest_path.exists():

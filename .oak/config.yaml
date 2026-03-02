@@ -1,5 +1,5 @@
 version: 1.2.7
-agents: [claude, cursor, codex]
+agents: [codex]
 rfc:
   directory: oak/rfc
   template: engineering
@@ -34,16 +34,9 @@ codebase_intelligence:
   - .git/**
   - .oak
   - .oak/**
-  - .claude/commands
-  - .claude/settings.local.json
-  - .claude/skills
   - .codex/config.toml
   - .codex/prompts
   - .codex/skills
-  - .cursor/commands
-  - .cursor/mcp.json
-  - .cursor/settings.json
-  - .cursor/skills
   - .gemini/commands
   - .gemini/settings.json
   - .gemini/skills
@@ -58,10 +51,6 @@ codebase_intelligence:
   - .windsurf/settings.json
   - .windsurf/skills
   - opencode.json
-  - .claude/settings.json
-  - .cursor/hooks.json
-  - .cursor/hooks
-  - .cursor/hooks/**
   - node_modules
   - node_modules/**
   - '**/node_modules'

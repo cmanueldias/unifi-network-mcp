@@ -15,7 +15,7 @@ class TestServerPortConfig:
         """Create a temporary config file with env var interpolation."""
         config_content = """
 server:
-  host: ${oc.env:UNIFI_MCP_HOST,0.0.0.0}
+  host: ${oc.env:UNIFI_MCP_HOST,127.0.0.1}
   port: ${oc.env:UNIFI_MCP_PORT,3000}
   log_level: INFO
 
@@ -29,12 +29,12 @@ unifi:
         return config_file
 
     def test_default_host_when_env_not_set(self, config_yaml_path):
-        """Verify default host 0.0.0.0 is used when UNIFI_MCP_HOST is not set."""
+        """Verify default host 127.0.0.1 is used when UNIFI_MCP_HOST is not set."""
         # Ensure env var is not set
         env = {k: v for k, v in os.environ.items() if k != "UNIFI_MCP_HOST"}
         with mock.patch.dict(os.environ, env, clear=True):
             cfg = OmegaConf.load(str(config_yaml_path))
-            assert cfg.server.host == "0.0.0.0"
+            assert cfg.server.host == "127.0.0.1"
 
     def test_default_port_when_env_not_set(self, config_yaml_path):
         """Verify default port 3000 is used when UNIFI_MCP_PORT is not set."""
@@ -85,7 +85,7 @@ class TestServerConfigFromActualFile:
         config_path = Path(__file__).parent.parent.parent / "src" / "config" / "config.yaml"
         content = config_path.read_text()
 
-        assert "${oc.env:UNIFI_MCP_HOST,0.0.0.0}" in content, (
+        assert "${oc.env:UNIFI_MCP_HOST,127.0.0.1}" in content, (
             "config.yaml should use OmegaConf env interpolation for host"
         )
         assert "${oc.env:UNIFI_MCP_PORT,3000}" in content, "config.yaml should use OmegaConf env interpolation for port"
