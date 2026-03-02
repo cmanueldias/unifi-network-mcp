@@ -11,6 +11,10 @@
 [![validate-docker-badge]][validate-docker-workflow]
 
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/sirkirby)
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://buymeacoffee.com/cmanueldias)
+
+> Original project by [sirkirby](https://github.com/sirkirby).  
+> This fork includes additional changes by [cmanueldias](https://github.com/cmanueldias) focused on OpenAI Codex-first usage and workflow.
 
 A self-hosted [Model Context Protocol](https://github.com/modelcontextprotocol) (MCP) server that turns your UniFi Network Controller into a rich set of interactive tools. Every capability is exposed via standard MCP **tools** prefixed with `unifi_`, so any LLM or agent that speaks MCP (e.g. OpenAI Codex, `mcp-cli`, LangChain, etc.) can query, analyze **and** – when explicitly authorized – modify your network. These tools must have local access to your UniFi Network Controller, by either running locally or in the cloud connected via a secure reverse proxy. Please consider the [security implications](#security-considerations) of running these tools in the cloud as they contain sensitive information and access to your network.
 
